@@ -52,16 +52,20 @@ spec:
       required:
         - confirmarCriacao
       properties:
-          custoEstimado:
-            title: Custo Estimado
-            type: string
-            readOnly: true
-            default: |
-              Total estimado: R${{ parameters.cpu | parseInt | multiply(1) + (parameters.memoria | replace("Gi", "") | parseInt | multiply(3)) }}
-          confirmarCriacao:
-            title: Confirmar criação do projeto?
-            type: boolean
-            description: Marque para prosseguir com a solicitação.
+        custoTotal:
+          title: Custo Total (oculto)
+          type: integer
+          default: ${{ parameters.cpu | parseInt | multiply(1) + (parameters.memoria | replace("Gi", "") | parseInt | multiply(3)) }}
+          ui:field: Hidden
+        custoEstimado:
+          title: Custo Estimado
+          type: string
+          readOnly: true
+          default: ${{ "Total estimado >> R$" + (parameters.cpu | parseInt | multiply(1) + (parameters.memoria | replace("Gi", "") | parseInt | multiply(3))) }}
+        confirmarCriacao:
+          title: Confirmar criação do projeto?
+          type: boolean
+          description: Marque para prosseguir com a solicitação.
 
   steps:
     - id: calcular-custo
