@@ -86,20 +86,26 @@ spec:
               : "🚫 Usuário NÃO confirmou. Template será encerrado."
           }}
 
-    - id: criar-ticket
-      name: Criar Ticket no Jira
-      if: ${{ parameters.confirmarCriacao }}
-      action: custom:jira:createTicket
+    - id: gerar-descricao
+      name: Montar descrição formatada
+      action: template:template
       input:
-        projectKey: ZT
-        issueType: Task
-        summary: "[Infra] Solicitação de Projeto: ${{ parameters.nomeProjeto }}"
-        description: |
+        template: |
           Solicitação de projeto criada via Backstage:
           - Projeto: ${{ parameters.nomeProjeto }}
           - Memória: ${{ parameters.memoria }}
           - CPU: ${{ parameters.cpu }}
           - 💰 Custo estimado: R$${{ parameters.cpu | parseInt | multiply(1) + (parameters.memoria | replace("Gi", "") | parseInt | multiply(3)) }}
+        resultVar: descricaoFinal
+    
+    - id: criar-ticket
+      name: Criar Ticket no Jira
+      action: custom:jira:createTicket
+      input:
+        projectKey: ZT
+        issueType: Task
+        summary: "[Infra] Solicitação de Projeto: ${{ parameters.nomeProjeto }}"
+        description: ${{ steps.gerar-descricao.output.result }}
 
   output:
     text:
@@ -113,4 +119,3 @@ spec:
           - CPU: ${{ parameters.cpu }}
           - 💰 Custo estimado: R$${{ parameters.cpu | parseInt | multiply(1) + (parameters.memoria | replace("Gi", "") | parseInt | multiply(3)) }}
 
-          Obrigado por utilizar o Backstage!
