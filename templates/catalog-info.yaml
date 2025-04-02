@@ -7,4 +7,3 @@ metadata:
 spec:
   type: infrastructure
   owner: equipe-devops
-  path: ./template.yaml
