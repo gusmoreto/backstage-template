@@ -1,0 +1,10 @@
+apiVersion: backstage.io/v1alpha1
+kind: Template
+metadata:
+  name: projeto-infra
+  title: Solicitação de Projeto de Infraestrutura
+  description: Template para solicitar projeto com recursos
+spec:
+  type: infrastructure
+  owner: equipe-devops
+  path: ./template.yaml
