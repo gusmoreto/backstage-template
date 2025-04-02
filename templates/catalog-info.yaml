@@ -56,4 +56,5 @@ spec:
           CPU: ${{ parameters.cpu }}
   output:
     text:
-      - "Solicitação criada com sucesso!"
+      - title: Resultado
+        content: "Solicitação criada com sucesso!"
