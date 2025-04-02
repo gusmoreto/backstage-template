@@ -16,6 +16,7 @@ spec:
           title: Nome do Projeto
           type: string
           description: Nome identificador do projeto
+
     - title: Recursos do Projeto
       required:
         - memoria
@@ -45,20 +46,43 @@ spec:
             - "2 vCPU"
             - "4 vCPU"
           description: Escolha a quantidade de CPU
+
+    - title: Confirmação de Custo
+      properties:
+        confirmarCriacao:
+          title: Confirmar criação com custo estimado?
+          type: boolean
+          description: Custo será calculado com base em CPU e Memória escolhidos
+
   steps:
-    - id: log
-      name: Exibir dados
+    - id: calcular-custo
+      name: Calcular Custo Estimado
       action: debug:log
       input:
         message: |
-          Projeto: ${{ parameters.nomeProjeto }}
-          Memória: ${{ parameters.memoria }}
-          CPU: ${{ parameters.cpu }}
+          🔍 Cálculo de custo estimado:
+          - CPU: ${{ parameters.cpu }} x R$1 = R$${{ parameters.cpu }}
+          - Memória: ${{ parameters.memoria }} x R$3
+
+          Total estimado: R$${{ parameters.cpu | parseInt | multiply(1) + (parameters.memoria | replace("Gi", "") | parseInt | multiply(3)) }}
+
+    - id: verificar-confirmacao
+      name: Verificar Confirmação
+      action: debug:log
+      input:
+        message: |
+          ${{
+            parameters.confirmarCriacao
+              ? "Usuário confirmou criação. Prosseguindo..."
+              : "Usuário NÃO confirmou. Template será encerrado sem criar o ticket."
+          }}
+
     - id: criar-ticket
       name: Criar Ticket no Jira
+      if: ${{ parameters.confirmarCriacao }}
       action: custom:jira:createTicket
       input:
-        projectKey: ZT     # ou DEVOPS, ou o código real do seu projeto no Jira
+        projectKey: ZT
         issueType: Task
         summary: "[Infra] Solicitação de Projeto: ${{ parameters.nomeProjeto }}"
         description: |
@@ -66,7 +90,10 @@ spec:
           - Projeto: ${{ parameters.nomeProjeto }}
           - Memória: ${{ parameters.memoria }}
           - CPU: ${{ parameters.cpu }}
+          - Custo estimado: R$${{ parameters.cpu | parseInt | multiply(1) + (parameters.memoria | replace("Gi", "") | parseInt | multiply(3)) }}
+
   output:
     text:
       - title: Resultado
-        content: "Solicitação criada com sucesso!"
+        content: |
+          Solicitação criada com sucesso (se confirmada).
