@@ -9,13 +9,13 @@ spec:
   owner: equipe-devops
   parameters:
     - title: Informações do Projeto
-      required:
-        - nomeProjeto
-      properties:
-        nomeProjeto:
-          title: Nome do Projeto
-          type: string
-          description: Nome identificador do projeto
+        required:
+          - nomeProjeto
+        properties:
+          nomeProjeto:
+            title: Nome do Projeto
+            type: string
+            description: Nome identificador do projeto
 
     - title: Recursos do Projeto
       required:
@@ -47,12 +47,21 @@ spec:
             - "4 vCPU"
           description: Escolha a quantidade de CPU
 
-    - title: Confirmação de Custo
-      properties:
-        confirmarCriacao:
-          title: Confirmar criação com custo estimado?
-          type: boolean
-          description: Custo será calculado com base em CPU e Memória escolhidos
+    - title: Confirmação e Custo
+        description: Confirme a criação do projeto com base no custo estimado.
+        required:
+          - confirmarCriacao
+        properties:
+          custoEstimado:
+            title: Custo Estimado
+            type: string
+            readOnly: true
+            default: |
+              Total estimado: R${{ parameters.cpu | parseInt | multiply(1) + (parameters.memoria | replace("Gi", "") | parseInt | multiply(3)) }}
+          confirmarCriacao:
+            title: Confirmar criação do projeto?
+            type: boolean
+            description: Marque para prosseguir com a solicitação.
 
   steps:
     - id: calcular-custo
@@ -91,7 +100,6 @@ spec:
           - Memória: ${{ parameters.memoria }}
           - CPU: ${{ parameters.cpu }}
           - Custo estimado: R$${{ parameters.cpu | parseInt | multiply(1) + (parameters.memoria | replace("Gi", "") | parseInt | multiply(3)) }}
-
   output:
     text:
       - title: Resultado
