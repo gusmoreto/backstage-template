@@ -73,7 +73,7 @@ spec:
           - CPU: ${{ parameters.cpu }} x R$1 = R$${{ parameters.cpu }}
           - Memória: ${{ parameters.memoria }} x R$3
 
-          Total estimado: R$${{ parameters.cpu | parseInt | multiply(1) + (parameters.memoria | replace("Gi", "") | parseInt | multiply(3)) }}
+          💰 Total estimado: R$${{ parameters.cpu | parseInt | multiply(1) + (parameters.memoria | replace("Gi", "") | parseInt | multiply(3)) }}
 
     - id: verificar-confirmacao
       name: Verificar Confirmação
@@ -99,10 +99,18 @@ spec:
           - Projeto: ${{ parameters.nomeProjeto }}
           - Memória: ${{ parameters.memoria }}
           - CPU: ${{ parameters.cpu }}
-          - Custo estimado: R$${{ parameters.cpu | parseInt | multiply(1) + (parameters.memoria | replace("Gi", "") | parseInt | multiply(3)) }}
+          - 💰 Custo estimado: R$${{ parameters.cpu | parseInt | multiply(1) + (parameters.memoria | replace("Gi", "") | parseInt | multiply(3)) }}
 
   output:
     text:
       - title: Resultado
         content: |
-          📝 Solicitação criada com sucesso (se confirmada).
+          ✅ Solicitação criada com sucesso!
+
+          📦 Detalhes:
+          - Projeto: ${{ parameters.nomeProjeto }}
+          - Memória: ${{ parameters.memoria }}
+          - CPU: ${{ parameters.cpu }}
+          - 💰 Custo estimado: R$${{ parameters.cpu | parseInt | multiply(1) + (parameters.memoria | replace("Gi", "") | parseInt | multiply(3)) }}
+
+          Obrigado por utilizar o Backstage!
