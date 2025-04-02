@@ -52,16 +52,12 @@ spec:
       required:
         - confirmarCriacao
       properties:
-        custoTotal:
-          title: Custo Total (oculto)
-          type: integer
-          default: ${{ parameters.cpu | parseInt | multiply(1) + (parameters.memoria | replace("Gi", "") | parseInt | multiply(3)) }}
-          ui:field: Hidden
         custoEstimado:
           title: Custo Estimado
           type: string
           readOnly: true
-          default: ${{ "Total estimado >> R$" + (parameters.cpu | parseInt | multiply(1) + (parameters.memoria | replace("Gi", "") | parseInt | multiply(3))) }}
+          ui:field: CustoEstimado
+          description: Valor calculado dinamicamente com base na memória e CPU.
         confirmarCriacao:
           title: Confirmar criação do projeto?
           type: boolean
@@ -103,7 +99,7 @@ spec:
           - Projeto: ${{ parameters.nomeProjeto }}
           - Memória: ${{ parameters.memoria }}
           - CPU: ${{ parameters.cpu }}
-          - Custo estimado: R$${{ parameters.cpu | parseInt | multiply(1) + (parameters.memoria | replace("Gi", "") | parseInt | multiply(3)) }}
+          - Custo estimado: ${{ parameters.custoEstimado }}
   output:
     text:
       - title: Resultado
