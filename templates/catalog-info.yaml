@@ -12,10 +12,10 @@ spec:
       required:
         - nomeProjeto
       properties:
-          nomeProjeto:
-            title: Nome do Projeto
-            type: string
-            description: Nome identificador do projeto
+        nomeProjeto:
+          title: Nome do Projeto
+          type: string
+          description: Nome identificador do projeto
 
     - title: Recursos do Projeto
       required:
@@ -56,11 +56,8 @@ spec:
           title: Custo Estimado
           type: string
           ui:field: CustoEstimado
+          readOnly: true
           description: Valor calculado dinamicamente com base na memória e CPU.
-        custoTotalFinal:
-          title: (hidden)
-          type: string
-          ui:field: Hidden
         confirmarCriacao:
           title: Confirmar criação do projeto?
           type: boolean
@@ -85,8 +82,8 @@ spec:
         message: |
           ${{
             parameters.confirmarCriacao
-              ? "Usuário confirmou criação. Prosseguindo..."
-              : "Usuário NÃO confirmou. Template será encerrado sem criar o ticket."
+              ? "✅ Usuário confirmou criação. Prosseguindo..."
+              : "🚫 Usuário NÃO confirmou. Template será encerrado."
           }}
 
     - id: criar-ticket
@@ -102,9 +99,10 @@ spec:
           - Projeto: ${{ parameters.nomeProjeto }}
           - Memória: ${{ parameters.memoria }}
           - CPU: ${{ parameters.cpu }}
-          - Custo estimado: ${{ parameters.custoTotalFinal }}
+          - Custo estimado: R$${{ parameters.cpu | parseInt | multiply(1) + (parameters.memoria | replace("Gi", "") | parseInt | multiply(3)) }}
+
   output:
     text:
       - title: Resultado
         content: |
-          Solicitação criada com sucesso (se confirmada).
+          📝 Solicitação criada com sucesso (se confirmada).
