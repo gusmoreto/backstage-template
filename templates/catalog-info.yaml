@@ -54,6 +54,18 @@ spec:
           Projeto: ${{ parameters.nomeProjeto }}
           Memória: ${{ parameters.memoria }}
           CPU: ${{ parameters.cpu }}
+    - id: criar-ticket
+      name: Criar Ticket no Jira
+      action: jira:create
+      input:
+        project: INFRA
+        issuetype: Task
+        summary: "[Infra] Solicitação de Projeto: ${{ parameters.nomeProjeto }}"
+        description: |
+          Solicitação de projeto criada via Backstage:
+          - Projeto: ${{ parameters.nomeProjeto }}
+          - Memória: ${{ parameters.memoria }}
+          - CPU: ${{ parameters.cpu }}
   output:
     text:
       - title: Resultado
