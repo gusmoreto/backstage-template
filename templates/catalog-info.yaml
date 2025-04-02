@@ -47,34 +47,22 @@ spec:
             - "4 vCPU"
           description: Escolha a quantidade de CPU
 
-    - title: Confirmação e Custo
-      description: Confirme a criação do projeto com base no custo estimado.
+    - title: Confirmação
       required:
         - confirmarCriacao
       properties:
-        custoEstimado:
-          title: Custo Estimado
+        custoSimulado:
+          title: 💰 Custo Estimado
           type: string
-          ui:field: CustoEstimado
+          default: "R$25"
           readOnly: true
-          description: Valor calculado dinamicamente com base na memória e CPU.
+          description: Valor fixo para fins de demonstração.
         confirmarCriacao:
           title: Confirmar criação do projeto?
           type: boolean
           description: Marque para prosseguir com a solicitação.
 
   steps:
-    - id: calcular-custo
-      name: Calcular Custo Estimado
-      action: debug:log
-      input:
-        message: |
-          🔍 Cálculo de custo estimado:
-          - CPU: ${{ parameters.cpu }} x R$1 = R$${{ parameters.cpu }}
-          - Memória: ${{ parameters.memoria }} x R$3
-
-          💰 Total estimado: R$${{ parameters.cpu | parseInt | multiply(1) + (parameters.memoria | replace("Gi", "") | parseInt | multiply(3)) }}
-
     - id: verificar-confirmacao
       name: Verificar Confirmação
       action: debug:log
@@ -86,26 +74,20 @@ spec:
               : "🚫 Usuário NÃO confirmou. Template será encerrado."
           }}
 
-    - id: gerar-descricao
-      name: Montar descrição formatada
-      action: template:template
-      input:
-        template: |
-          Solicitação de projeto criada via Backstage:
-          - Projeto: ${{ parameters.nomeProjeto }}
-          - Memória: ${{ parameters.memoria }}
-          - CPU: ${{ parameters.cpu }}
-          - 💰 Custo estimado: R$${{ parameters.cpu | parseInt | multiply(1) + (parameters.memoria | replace("Gi", "") | parseInt | multiply(3)) }}
-        resultVar: descricaoFinal
-    
     - id: criar-ticket
       name: Criar Ticket no Jira
+      if: ${{ parameters.confirmarCriacao }}
       action: custom:jira:createTicket
       input:
         projectKey: ZT
         issueType: Task
         summary: "[Infra] Solicitação de Projeto: ${{ parameters.nomeProjeto }}"
-        description: ${{ steps.gerar-descricao.output.result }}
+        description: |
+          Solicitação de projeto criada via Backstage:
+          - Projeto: ${{ parameters.nomeProjeto }}
+          - Memória: ${{ parameters.memoria }}
+          - CPU: ${{ parameters.cpu }}
+          - 💰 Custo estimado: R$25
 
   output:
     text:
@@ -117,5 +99,4 @@ spec:
           - Projeto: ${{ parameters.nomeProjeto }}
           - Memória: ${{ parameters.memoria }}
           - CPU: ${{ parameters.cpu }}
-          - 💰 Custo estimado: R$${{ parameters.cpu | parseInt | multiply(1) + (parameters.memoria | replace("Gi", "") | parseInt | multiply(3)) }}
-
+          - 💰 Custo estimado: R$25
