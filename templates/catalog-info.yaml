@@ -56,7 +56,7 @@ spec:
           CPU: ${{ parameters.cpu }}
     - id: criar-ticket
       name: Criar Ticket no Jira
-      action: jira:create
+      action: custom:jira:createTicket
       input:
         project: Zero Touch
         issuetype: Task
