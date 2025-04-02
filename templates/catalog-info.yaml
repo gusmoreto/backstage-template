@@ -55,9 +55,12 @@ spec:
         custoEstimado:
           title: Custo Estimado
           type: string
-          readOnly: true
           ui:field: CustoEstimado
           description: Valor calculado dinamicamente com base na memória e CPU.
+        custoTotalFinal:
+          title: (hidden)
+          type: string
+          ui:field: Hidden
         confirmarCriacao:
           title: Confirmar criação do projeto?
           type: boolean
@@ -99,7 +102,7 @@ spec:
           - Projeto: ${{ parameters.nomeProjeto }}
           - Memória: ${{ parameters.memoria }}
           - CPU: ${{ parameters.cpu }}
-          - Custo estimado: ${{ parameters.custoEstimado }}
+          - Custo estimado: ${{ parameters.custoTotalFinal }}
   output:
     text:
       - title: Resultado
