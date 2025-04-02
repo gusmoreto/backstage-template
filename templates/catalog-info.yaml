@@ -58,8 +58,8 @@ spec:
       name: Criar Ticket no Jira
       action: custom:jira:createTicket
       input:
-        project: Zero Touch
-        issuetype: Task
+        projectKey: ZT     # ou DEVOPS, ou o código real do seu projeto no Jira
+        issueType: Task
         summary: "[Infra] Solicitação de Projeto: ${{ parameters.nomeProjeto }}"
         description: |
           Solicitação de projeto criada via Backstage:
