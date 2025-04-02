@@ -58,7 +58,7 @@ spec:
       name: Criar Ticket no Jira
       action: jira:create
       input:
-        project: INFRA
+        project: Zero Touch
         issuetype: Task
         summary: "[Infra] Solicitação de Projeto: ${{ parameters.nomeProjeto }}"
         description: |
