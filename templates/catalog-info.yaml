@@ -12,10 +12,10 @@ spec:
       required:
         - nomeProjeto
       properties:
-        nomeProjeto:
-          title: Nome do Projeto
-          type: string
-          description: Nome identificador do projeto
+          nomeProjeto:
+            title: Nome do Projeto
+            type: string
+            description: Nome identificador do projeto
 
     - title: Recursos do Projeto
       required:
@@ -52,16 +52,16 @@ spec:
       required:
         - confirmarCriacao
       properties:
-        custoEstimado:
-          title: Custo Estimado
-          type: string
-          readOnly: true
-          default: |
-            Total estimado: R$${{ parameters.cpu | parseInt | multiply(1) + (parameters.memoria | replace("Gi", "") | parseInt | multiply(3)) }}
-        confirmarCriacao:
-          title: Confirmar criação do projeto?
-          type: boolean
-          description: Marque para prosseguir com a solicitação.
+          custoEstimado:
+            title: Custo Estimado
+            type: string
+            readOnly: true
+            default: |
+              Total estimado: R${{ parameters.cpu | parseInt | multiply(1) + (parameters.memoria | replace("Gi", "") | parseInt | multiply(3)) }}
+          confirmarCriacao:
+            title: Confirmar criação do projeto?
+            type: boolean
+            description: Marque para prosseguir com a solicitação.
 
   steps:
     - id: calcular-custo
@@ -82,8 +82,8 @@ spec:
         message: |
           ${{
             parameters.confirmarCriacao
-              ? "✅ Usuário confirmou criação. Prosseguindo..."
-              : "❌ Usuário NÃO confirmou. Template será encerrado sem criar o ticket."
+              ? "Usuário confirmou criação. Prosseguindo..."
+              : "Usuário NÃO confirmou. Template será encerrado sem criar o ticket."
           }}
 
     - id: criar-ticket
@@ -100,7 +100,6 @@ spec:
           - Memória: ${{ parameters.memoria }}
           - CPU: ${{ parameters.cpu }}
           - Custo estimado: R$${{ parameters.cpu | parseInt | multiply(1) + (parameters.memoria | replace("Gi", "") | parseInt | multiply(3)) }}
-
   output:
     text:
       - title: Resultado
