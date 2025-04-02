@@ -1,0 +1,64 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: projeto-infra
+  title: Solicitação de Projeto de Infraestrutura
+  description: Criação de novo projeto com configuração de recursos
+spec:
+  owner: equipe-devops
+  type: infraestrutura
+
+  parameters:
+    - title: Informações do Projeto
+      required:
+        - nomeProjeto
+      properties:
+        nomeProjeto:
+          title: Nome do Projeto
+          type: string
+          description: Nome identificador do projeto
+
+    - title: Recursos do Projeto
+      required:
+        - memoria
+        - cpu
+      properties:
+        memoria:
+          title: Quantidade de Memória
+          type: string
+          enum:
+            - "2Gi"
+            - "4Gi"
+            - "8Gi"
+          enumNames:
+            - "2 GB"
+            - "4 GB"
+            - "8 GB"
+          description: Escolha a quantidade de memória
+
+        cpu:
+          title: Quantidade de CPU
+          type: string
+          enum:
+            - "1"
+            - "2"
+            - "4"
+          enumNames:
+            - "1 vCPU"
+            - "2 vCPU"
+            - "4 vCPU"
+          description: Escolha a quantidade de CPU
+
+  steps:
+    - id: log
+      name: Exibir dados
+      action: debug:log
+      input:
+        message: |
+          Projeto: ${{ parameters.nomeProjeto }}
+          Memória: ${{ parameters.memoria }}
+          CPU: ${{ parameters.cpu }}
+
+  output:
+    text:
+      - "Solicitação criada com sucesso!"
