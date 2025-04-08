@@ -35,32 +35,14 @@ spec:
             - Operações
             - Dados
             - Segurança
-        site:
-          title: Site
-          type: string
-          enum:
-            - DFCTO
-            - RSIND
-            - PRCTA
-            - SPJGR
-            - SP-SANTA EFIGENIA
-            - SPCTP
-            - SPPAS
-            - SCFNS
-            - MGBHF
-            - RJBAR
-            - AMAFP
-            - PACCP
-            - BATCS
-            - Outro
-        siteOutroEndereco:
-          title: Endereço (se site for "Outro")
-          type: string
-          ui:widget: textarea
-        siteOutroJustificativa:
-          title: Justificativa (se site for "Outro")
-          type: string
-          ui:widget: textarea
+            
+  - title: Localização
+    required: [site]
+    properties:
+      site:
+        title: Site
+        type: string
+        ui:field: CustomSiteField
 
     - title: Recursos Necessários
       required: [cpu, memoria, disco]
