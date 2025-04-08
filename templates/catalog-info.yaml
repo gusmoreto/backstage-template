@@ -36,9 +36,31 @@ spec:
             - Dados
             - Segurança
         site:
-         title: Site
-         type: string
-         ui:field: CustomSiteField
+          title: Site
+          type: string
+          enum:
+            - DFCTO
+            - RSIND
+            - PRCTA
+            - SPJGR
+            - SP-SANTA EFIGENIA
+            - SPCTP
+            - SPPAS
+            - SCFNS
+            - MGBHF
+            - RJBAR
+            - AMAFP
+            - PACCP
+            - BATCS
+            - Outro
+        siteOutroEndereco:
+          title: Endereço (se site = Outro)
+          type: string
+          ui:widget: textarea
+        siteOutroJustificativa:
+          title: Justificativa (se site = Outro)
+          type: string
+          ui:widget: textarea
 
 
     - title: Recursos Necessários
