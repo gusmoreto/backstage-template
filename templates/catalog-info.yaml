@@ -35,14 +35,11 @@ spec:
             - Operações
             - Dados
             - Segurança
-            
-  - title: Localização
-    required: [site]
-    properties:
-      site:
-        title: Site
-        type: string
-        ui:field: CustomSiteField
+        site:
+         title: Site
+         type: string
+         ui:field: CustomSiteField
+
 
     - title: Recursos Necessários
       required: [cpu, memoria, disco]
