@@ -11,41 +11,92 @@ spec:
     - title: Informações do Projeto
       required:
         - nomeProjeto
+        - usuario
+        - email
+        - area
+        - site
       properties:
         nomeProjeto:
           title: Nome do Projeto
           type: string
-          description: Nome identificador do projeto
+        usuario:
+          title: Nome do Usuário
+          type: string
+        email:
+          title: E-mail
+          type: string
+          format: email
+        area:
+          title: Área
+          type: string
+          enum:
+            - Infraestrutura
+            - Desenvolvimento
+            - Operações
+            - Dados
+            - Segurança
+        site:
+          title: Site
+          type: string
+          enum:
+            - DFCTO
+            - RSIND
+            - PRCTA
+            - SPJGR
+            - SP-SANTA EFIGENIA
+            - SPCTP
+            - SPPAS
+            - SCFNS
+            - MGBHF
+            - RJBAR
+            - AMAFP
+            - PACCP
+            - BATCS
+            - Outro
+        siteOutroEndereco:
+          title: Endereço (se site for "Outro")
+          type: string
+          ui:widget: textarea
+        siteOutroJustificativa:
+          title: Justificativa (se site for "Outro")
+          type: string
+          ui:widget: textarea
 
-    - title: Recursos do Projeto
-      required:
-        - memoria
-        - cpu
+    - title: Recursos Necessários
+      required: [cpu, memoria, disco]
       properties:
-        memoria:
-          title: Quantidade de Memória
-          type: string
-          enum:
-            - "2Gi"
-            - "4Gi"
-            - "8Gi"
-          enumNames:
-            - "2 GB"
-            - "4 GB"
-            - "8 GB"
-          description: Escolha a quantidade de memória
         cpu:
-          title: Quantidade de CPU
+          title: CPU (cores)
+          type: number
+          minimum: 1
+        memoria:
+          title: Memória (GB)
+          type: number
+          minimum: 1
+        disco:
+          title: Disco (GB)
+          type: number
+          minimum: 1
+        readWriteMany:
+          title: Precisa de múltipla escrita (ReadWriteMany)?
+          type: boolean
+          default: false
+
+    - title: Orçamento
+      required:
+        - idOrcamento
+        - megaProjeto
+        - acaoInversora
+      properties:
+        idOrcamento:
+          title: ID Orçamentário
           type: string
-          enum:
-            - "1"
-            - "2"
-            - "4"
-          enumNames:
-            - "1 vCPU"
-            - "2 vCPU"
-            - "4 vCPU"
-          description: Escolha a quantidade de CPU
+        megaProjeto:
+          title: Mega Projeto (Diretoria)
+          type: string
+        acaoInversora:
+          title: Ação Inversora
+          type: string
 
     - title: Confirmação
       required:
@@ -56,11 +107,9 @@ spec:
           type: string
           default: "R$25"
           readOnly: true
-          description: Valor fixo para fins de demonstração.
         confirmarCriacao:
           title: Confirmar criação do projeto?
           type: boolean
-          description: Marque para prosseguir com a solicitação.
 
   steps:
     - id: verificar-confirmacao
@@ -81,22 +130,36 @@ spec:
       input:
         projectKey: ZT
         issueType: Task
-        summary: "[Infra] Solicitação de Projeto: ${{ parameters.nomeProjeto }}"
+        summary: "[Infra] Solicitação: ${{ parameters.nomeProjeto }}"
         description: |
-          Solicitação de projeto criada via Backstage:
-          - Projeto: ${{ parameters.nomeProjeto }}
-          - Memória: ${{ parameters.memoria }}
+          📝 Solicitação de Infraestrutura criada via Backstage:
+
+          📌 Projeto: ${{ parameters.nomeProjeto }}
+          👤 Solicitante: ${{ parameters.usuario }} - ${{ parameters.email }}
+          🏢 Área: ${{ parameters.area }}
+
+          📍 Site: ${{ parameters.site }}
+          ${{
+            parameters.site == "Outro"
+              ? "📫 Endereço: " + parameters.siteOutroEndereco + "\n📄 Justificativa: " + parameters.siteOutroJustificativa
+              : ""
+          }}
+
+          ⚙️ Recursos:
           - CPU: ${{ parameters.cpu }}
-          - 💰 Custo estimado: R$25
+          - Memória: ${{ parameters.memoria }}
+          - Disco: ${{ parameters.disco }} GB
+          - RWX: ${{ parameters.readWriteMany }}
+
+          💰 Orçamento:
+          - ID: ${{ parameters.idOrcamento }}
+          - Mega Projeto: ${{ parameters.megaProjeto }}
+          - Ação Inversora: ${{ parameters.acaoInversora }}
+
+          ✅ Solicitação confirmada pelo usuário.
 
   output:
     text:
-      - title: Resultado
+      - title: Solicitação enviada com sucesso!
         content: |
-          ✅ Solicitação criada com sucesso!
-
-          📦 Detalhes:
-          - Projeto: ${{ parameters.nomeProjeto }}
-          - Memória: ${{ parameters.memoria }}
-          - CPU: ${{ parameters.cpu }}
-          - 💰 Custo estimado: R$25
+          A abertura de demanda foi realizada e o ticket foi criado no Jira com os dados fornecidos.
