@@ -1,166 +1,693 @@
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: projeto-infra
-  title: Solicitação de Projeto de Infraestrutura
-  description: Template para solicitar projeto com recursos
+  name: abertura-demanda
+  title: Formulário de Abertura de Demanda
+  description: |
+    Solicitação de nova infraestrutura ou ampliação de capacidade
+    conforme documento.
 spec:
-  type: infrastructure
   owner: equipe-devops
-  parameters:
-    - title: Informações do Projeto
-      required:
-        - nomeProjeto
-        - usuario
+  type: service
+
+parameters:
+  - title: Informações do Projeto
+    required:
+      - nomeNF
+      - vendor
+      - responsavelTecnico
+      - email
+      - diretoria
+      - gerencia
+      - site
+    properties:
+      nomeNF:
+        title: Nome da NF
+        type: string
+        ui:autofocus: true
+        description: Nome completo da Network Function
+      vendor:
+        title: Vendor
+        type: string
+        description: Nome do fornecedor da solução
+      responsavelTecnico:
+        title: Responsável Técnico
+        type: string
+        description: Nome completo do responsável
+      email:
+        title: E-mail
+        type: string
+        ui:widget: email
+        ui:field: EmailField
+        description: E-mail para contato e notificações
+        pattern: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
+        patternErrorMessage: "Por favor, insira um endereço de e-mail válido"
+      diretoria:
+        title: Diretoria
+        type: string
+        ui:field: Select
+        description: Selecione a diretoria
+        ui:options:
+          values:
+            - label: DIR CORE E MOVEL
+              value: DIR CORE E MOVEL
+            - label: DIR ENGENHARIA TRANSPORTE E INFRA
+              value: DIR ENGENHARIA TRANSPORTE E INFRA
+            - label: DIR GESTAO
+              value: DIR GESTAO
+            - label: DIR OPERACAO REDES
+              value: DIR OPERACAO REDES
+            - label: DIR SERV AO CLIENTE B2B
+              value: DIR SERV AO CLIENTE B2B
+            - label: DIR SERV AO CLIENTE CENTRALIZADO
+              value: DIR SERV AO CLIENTE CENTRALIZADO
+            - label: DIR TRANSFORMACAO DE REDES
+              value: DIR TRANSFORMACAO DE REDES
+            - label: Outra Diretoria
+              value: Outra
+      outraDiretoria:
+        title: Informe outra Diretoria
+        type: string
+        description: Preencha caso tenha selecionado "Outra" como Diretoria
+        ui:field dependency:
+          field: diretoria
+          oneOf:
+            - value: Outra
+      gerencia:
+        title: Gerência
+        type: string
+        ui:field: Select
+        description: Selecione a gerência
+        ui:options:
+          values:
+            # Gerências para DIR CORE E MOVEL
+            - label: GER SR ACESSO E INFRA MOVEL NACIONAL
+              value: GER SR ACESSO E INFRA MOVEL NACIONAL
+              ui:options:
+                hidden:
+                  not:
+                    diretoria: DIR CORE E MOVEL
+            - label: GER SR SERVICO DIGITAL
+              value: GER SR SERVICO DIGITAL
+              ui:options:
+                hidden:
+                  not:
+                    diretoria: DIR CORE E MOVEL
+            - label: GER SR CORE VOZ E DADOS
+              value: GER SR CORE VOZ E DADOS
+              ui:options:
+                hidden:
+                  not:
+                    diretoria: DIR CORE E MOVEL
+            - label: GER SR ACESSO E INFRA MOVEL CO NO NE
+              value: GER SR ACESSO E INFRA MOVEL CO NO NE
+              ui:options:
+                hidden:
+                  not:
+                    diretoria: DIR CORE E MOVEL
+            - label: GER SR ACESSO E INFRA MOVEL SP E SUL
+              value: GER SR ACESSO E INFRA MOVEL SP E SUL
+              ui:options:
+                hidden:
+                  not:
+                    diretoria: DIR CORE E MOVEL
+
+            # Gerências para DIR ENGENHARIA TRANSPORTE E INFRA
+            - label: GER SR CYBERSEC TECN E TV
+              value: GER SR CYBERSEC TECN E TV
+              ui:options:
+                hidden:
+                  not:
+                    diretoria: DIR ENGENHARIA TRANSPORTE E INFRA
+            - label: GER SR PLAN TRANSPORTE
+              value: GER SR PLAN TRANSPORTE
+              ui:options:
+                hidden:
+                  not:
+                    diretoria: DIR ENGENHARIA TRANSPORTE E INFRA
+            - label: GER SR ENG IMPLANTACAO BACKBONE
+              value: GER SR ENG IMPLANTACAO BACKBONE
+              ui:options:
+                hidden:
+                  not:
+                    diretoria: DIR ENGENHARIA TRANSPORTE E INFRA
+            - label: GER SR ENG BACKHAUL E ACESSO NORTE
+              value: GER SR ENG BACKHAUL E ACESSO NORTE
+              ui:options:
+                hidden:
+                  not:
+                    diretoria: DIR ENGENHARIA TRANSPORTE E INFRA
+            - label: GER SR PLAN REDE EXTERNA
+              value: GER SR PLAN REDE EXTERNA
+              ui:options:
+                hidden:
+                  not:
+                    diretoria: DIR ENGENHARIA TRANSPORTE E INFRA
+            - label: GER SR IMPLANTACAO REDE NORTE
+              value: GER SR IMPLANTACAO REDE NORTE
+              ui:options:
+                hidden:
+                  not:
+                    diretoria: DIR ENGENHARIA TRANSPORTE E INFRA
+
+            # Gerências para DIR GESTAO
+            - label: GER SR GESTAO E LIC SITES TÉCNICOS
+              value: GER SR GESTAO E LIC SITES TÉCNICOS
+              ui:options:
+                hidden:
+                  not:
+                    diretoria: DIR GESTAO
+            - label: GER SR DESEMPENHO DE REDES
+              value: GER SR DESEMPENHO DE REDES
+              ui:options:
+                hidden:
+                  not:
+                    diretoria: DIR GESTAO
+            - label: GER SR DESENV FORNEC OUTSOURCING
+              value: GER SR DESENV FORNEC OUTSOURCING
+              ui:options:
+                hidden:
+                  not:
+                    diretoria: DIR GESTAO
+            - label: GER SR PLANEJAMENTO INTEGRADO
+              value: GER SR PLANEJAMENTO INTEGRADO
+              ui:options:
+                hidden:
+                  not:
+                    diretoria: DIR GESTAO
+
+            # Gerências para DIR OPERACAO REDES
+            - label: GER SR CYBER SECURITY E GMUD
+              value: GER SR CYBER SECURITY E GMUD
+              ui:options:
+                hidden:
+                  not:
+                    diretoria: DIR OPERACAO REDES
+            - label: GER SR ACESSO MOVEL E BACKHAUL
+              value: GER SR ACESSO MOVEL E BACKHAUL
+              ui:options:
+                hidden:
+                  not:
+                    diretoria: DIR OPERACAO REDES
+            - label: GER SR O&M SERVICOS TV E BANDA LARGA
+              value: GER SR O&M SERVICOS TV E BANDA LARGA
+              ui:options:
+                hidden:
+                  not:
+                    diretoria: DIR OPERACAO REDES
+            - label: GER SR O&M REDE DE TRANSPORTE
+              value: GER SR O&M REDE DE TRANSPORTE
+              ui:options:
+                hidden:
+                  not:
+                    diretoria: DIR OPERACAO REDES
+            - label: GER SR CENTRO GER REDES E SERVIC
+              value: GER SR CENTRO GER REDES E SERVIC
+              ui:options:
+                hidden:
+                  not:
+                    diretoria: DIR OPERACAO REDES
+            - label: GER SR O&M SERVICOS VOZ
+              value: GER SR O&M SERVICOS VOZ
+              ui:options:
+                hidden:
+                  not:
+                    diretoria: DIR OPERACAO REDES
+
+            # Gerências para DIR SERV AO CLIENTE B2B
+            - label: GER SR OUTS GRANDES CLIENTES B2B
+              value: GER SR OUTS GRANDES CLIENTES B2B
+              ui:options:
+                hidden:
+                  not:
+                    diretoria: DIR SERV AO CLIENTE B2B
+            - label: GER SR PRODUCAO B2B
+              value: GER SR PRODUCAO B2B
+              ui:options:
+                hidden:
+                  not:
+                    diretoria: DIR SERV AO CLIENTE B2B
+            - label: GER SR PLANEJ E CONTROLE B2B
+              value: GER SR PLANEJ E CONTROLE B2B
+              ui:options:
+                hidden:
+                  not:
+                    diretoria: DIR SERV AO CLIENTE B2B
+
+            # Gerências para DIR SERV AO CLIENTE CENTRALIZADO
+            - label: GER SR SERV AO CLIENT SP INTERIOR 1
+              value: GER SR SERV AO CLIENT SP INTERIOR 1
+              ui:options:
+                hidden:
+                  not:
+                    diretoria: DIR SERV AO CLIENTE CENTRALIZADO
+            - label: GER SR CASA CLIENTE REDE MG
+              value: GER SR CASA CLIENTE REDE MG
+              ui:options:
+                hidden:
+                  not:
+                    diretoria: DIR SERV AO CLIENTE CENTRALIZADO
+            - label: GER SR OPERACOES ATENDIMENTO
+              value: GER SR OPERACOES ATENDIMENTO
+              ui:options:
+                hidden:
+                  not:
+                    diretoria: DIR SERV AO CLIENTE CENTRALIZADO
+            - label: GER SR SERV CLIENT B2C MANUT RED CW
+              value: GER SR SERV CLIENT B2C MANUT RED CW
+              ui:options:
+                hidden:
+                  not:
+                    diretoria: DIR SERV AO CLIENTE CENTRALIZADO
+            - label: GER SR CONT PROD CENTRALIZADA
+              value: GER SR CONT PROD CENTRALIZADA
+              ui:options:
+                hidden:
+                  not:
+                    diretoria: DIR SERV AO CLIENTE CENTRALIZADO
+            - label: GER SR O&M PLANTA INTERNA NACIONAL
+              value: GER SR O&M PLANTA INTERNA NACIONAL
+              ui:options:
+                hidden:
+                  not:
+                    diretoria: DIR SERV AO CLIENTE CENTRALIZADO
+            - label: GER SR SERV AO CLIENTE B2C SUL
+              value: GER SR SERV AO CLIENTE B2C SUL
+              ui:options:
+                hidden:
+                  not:
+                    diretoria: DIR SERV AO CLIENTE CENTRALIZADO
+            - label: GER SR SERV AO CLIENTE O&M SUL
+              value: GER SR SERV AO CLIENTE O&M SUL
+              ui:options:
+                hidden:
+                  not:
+                    diretoria: DIR SERV AO CLIENTE CENTRALIZADO
+            - label: GER SR SERV AO CLIENTE AREA REFE
+              value: GER SR SERV AO CLIENTE AREA REFE
+              ui:options:
+                hidden:
+                  not:
+                    diretoria: DIR SERV AO CLIENTE CENTRALIZADO
+            - label: GER SR SERV AO CLIENT SP INTERIOR 2
+              value: GER SR SERV AO CLIENT SP INTERIOR 2
+              ui:options:
+                hidden:
+                  not:
+                    diretoria: DIR SERV AO CLIENTE CENTRALIZADO
+            - label: GER SR SERV CLIENT SP METR LITORAL
+              value: GER SR SERV CLIENT SP METR LITORAL
+              ui:options:
+                hidden:
+                  not:
+                    diretoria: DIR SERV AO CLIENTE CENTRALIZADO
+
+            # Gerências para DIR TRANSFORMACAO DE REDES
+            - label: GER SR PMO REDES
+              value: GER SR PMO REDES
+              ui:options:
+                hidden:
+                  not:
+                    diretoria: DIR TRANSFORMACAO DE REDES
+            - label: GER SR TRANSFORMACAO DIGITAL REDES
+              value: GER SR TRANSFORMACAO DIGITAL REDES
+              ui:options:
+                hidden:
+                  not:
+                    diretoria: DIR TRANSFORMACAO DE REDES
+            - label: GER SR TECNOLOGIA DE DISPOSITIVOS
+              value: GER SR TECNOLOGIA DE DISPOSITIVOS
+              ui:options:
+                hidden:
+                  not:
+                    diretoria: DIR TRANSFORMACAO DE REDES
+            - label: GER SR DEVOPS
+              value: GER SR DEVOPS
+              ui:options:
+                hidden:
+                  not:
+                    diretoria: DIR TRANSFORMACAO DE REDES
+
+            # Opção "Outra" para gerência
+            - label: Outra Gerência
+              value: Outra
+      outraGerencia:
+        title: Informe outra Gerência
+        type: string
+        description: Preencha caso tenha selecionado "Outra" como Gerência
+        ui:field dependency:
+          field: gerencia
+          oneOf:
+            - value: Outra
+      site:
+        title: Site
+        type: string
+        ui:field: Select
+        description: Selecione o data center principal
+        ui:options:
+          values:
+            - label: AM-MANAUS
+              value: AM-MANAUS
+              ui:description: |
+                **Endereço:**  
+                Av. Getúlio Vargas, 950 - Afonso Pena  
+                Manaus - AM, 69008-000
+            - label: BA-SALVADOR
+              value: BA-SALVADOR
+              ui:description: |
+                **Endereço:**  
+                Rua Silveira Martins, 1036 - Cabula
+                Salvador - BA, 41150-000
+            - label: DF-BRASILIA
+              value: DF-BRASILIA
+              ui:description: |
+                **Endereço:**  
+                Q.3, Bloco A, Setor Comercial Norte - TCO
+                Brasília - DF, 71219-900
+            - label: MG-BELO HORIZONTE
+              value: MG-BELO HORIZONTE
+              ui:description: |
+                **Endereço:**  
+                Rua Claudio Manoel, 69 - Belo Horizonte
+                Belo Horizonte - MG, 30140-100
+            - label: PA-BELEM
+              value: PA-BELEM
+              ui:description: |
+                **Endereço:**  
+                Av. Marques do Herval, 2594 - Pedreira
+                Belém - PA, 66085-317                
+            - label: PR-CURITIBA
+              value: PR-CURITIBA
+              ui:description: |
+                **Endereço:**  
+                Rua Pedro Gusso, 711 - Pedro Gusso
+                Curitiba - PR, 81050-200
+            - label: RJ-RIO DE JANEIRO
+              value: RJ-RIO DE JANEIRO
+              ui:description: |
+                **Endereço:**  
+                Av. Ayrton Senna, 2200 - Barra da Tijuca
+                Rio de Janeiro - RJ, 22775-003 
+            - label: RS-PORTO ALEGRE
+              value: RS-PORTO ALEGRE
+              ui:description: |
+                **Endereço:**  
+                Av. Independência, 579 - Independência
+                Porto Alegre - RS, 90035-072
+            - label: SC-FLORIANOPOLIS
+              value: SC-FLORIANOPOLIS
+              ui:description: |
+                **Endereço:**  
+                Rua Antonio Francisco Bastos, 16 - Florianópolis
+                Florianópolis - SC, 88117-385
+            - label: SP-SAO PAULO (JAGUARÉ)
+              value: SP-SAO PAULO (JAGUARÉ)
+              ui:description: |
+                **Endereço:**  
+                Rua Jaguaré, 390 - Jaguaré Fixa
+                São Paulo - SP, 05344-030
+            - label: SP-SAO PAULO (PALMEIRAS)
+              value: SP-SAO PAULO (PALMEIRAS)
+              ui:description: |
+                **Endereço:**  
+                Rua Brigadeiro Galvão, 291 - Palmeiras
+                São Paulo - SP, 01151-000
+            - label: SP-SAO PAULO (SANTA EFIGÊNIA)
+              value: SP-SAO PAULO (SANTA EFIGÊNIA)
+              ui:description: |
+                **Endereço:**  
+                Rua General Osório, 532 - Santa Efigênia
+                São Paulo - SP, 01213-002
+            - label: SP-SAO PAULO (TATUAPÉ)
+              value: SP-SAO PAULO (TATUAPÉ)
+              ui:description: |
+                **Endereço:**  
+                Rua Uriel Gaspar, 260 - Tatuapé (PRÉ-PROD / LAB)
+                São Paulo - SP, 03301-000
+            - label: Outro
+              value: Outro
+      enderecoCustomizado:
+        title: Endereço Completo
+        type: string
+        description: Preencha caso tenha selecionado "Outro" como data center principal
+        ui:field dependency:
+          field: site
+          oneOf:
+            - value: Outro
+      justificativaCustomizado:
+        title: Justificativa para Site Customizado
+        type: string
+        description: Explique a necessidade deste data center principal
+        ui:field dependency:
+          field: site
+          oneOf:
+            - value: Outro
+
+  - title: Recursos Necessários
+    required:
+      - memoria
+      - cpu
+      - disco
+    properties:
+      memoria:
+        title: Memória (GB)
+        type: integer
+        minimum: 1
+        description: Quantidade de memória RAM necessária
+        ui:options:
+          helpText: "Mínimo de 1GB, valores decimais serão arredondados"
+      cpu:
+        title: CPUs
+        type: integer
+        minimum: 1
+        description: Quantidade de processadores virtuais
+        ui:options:
+          helpText: "Mínimo de 1 vCPU"
+      disco:
+        title: Disco (GB)
+        type: integer
+        minimum: 10
+        description: Capacidade de armazenamento necessária
+        ui:options:
+          helpText: "Mínimo de 10GB"
+      readWriteMany:
+        title: Precisa de sistema de arquivos ReadWriteMany?
+        type: boolean
+        default: false
+        ui:options:
+          trueLabel: "Sim, necessário"
+          falseLabel: "Não necessário"
+        description: Permite acesso simultâneo de múltiplos nós
+      dataCenters:
+        title: Site Adicionais
+        type: array
+        ui:field: DataCenterField
+        description: Adicione outros sites se necessário
+        items:
+          type: object
+          properties:
+            site:
+              title: Site Adicional
+              type: string
+              ui:field: Select
+              ui:options:
+                values:
+                  - label: AM-MANAUS
+                    value: AM-MANAUS
+                  - label: BA-SALVADOR
+                    value: BA-SALVADOR
+                  - label: DF-BRASILIA
+                    value: DF-BRASILIA
+                  - label: MG-BELO HORIZONTE
+                    value: MG-BELO HORIZONTE      
+                  - label: PA-BELEM
+                    value: PA-BELEM
+                  - label: PR-CURITIBA
+                    value: PR-CURITIBA
+                  - label: RJ-RIO DE JANEIRO
+                    value: RJ-RIO DE JANEIRO
+                  - label: RS-PORTO ALEGRE
+                    value: RS-PORTO ALEGRE
+                  - label: SC-FLORIANOPOLIS
+                    value: SC-FLORIANOPOLIS
+                  - label: SP-SAO PAULO (JAGUARÉ)
+                    value: SP-SAO PAULO (JAGUARÉ)
+                  - label: SP-SAO PAULO (PALMEIRAS)
+                    value: SP-SAO PAULO (PALMEIRAS)
+                  - label: SP-SAO PAULO (SANTA EFIGÊNIA)
+                    value: SP-SAO PAULO (SANTA EFIGÊNIA)
+                  - label: SP-SAO PAULO (TATUAPÉ)
+                    value: SP-SAO PAULO (TATUAPÉ)
+                  - label: Outro
+                    value: Outro
+            enderecoCustomizado:
+              title: Endereço Completo
+              type: string
+              ui:field dependency:
+                field: site
+                oneOf:
+                  - value: Outro
+            justificativaCustomizado:
+              title: Justificativa
+              type: string
+              ui:field dependency:
+                field: site
+                oneOf:
+                  - value: Outro
+            memoria:
+              title: Memória (GB)
+              type: integer
+              minimum: 1
+            cpu:
+              title: CPUs
+              type: integer
+              minimum: 1
+            disco:
+              title: Disco (GB)
+              type: integer
+              minimum: 10
+            readWriteMany:
+              title: ReadWriteMany
+              type: boolean
+              default: false
+
+  - title: Informações Orçamentárias
+    required:
+      - idOrcamento
+      - megaProjeto
+      - acaoInversora
+      - aceiteSLA
+    properties:
+      idOrcamento:
+        title: ID Orçamentário
+        type: string
+        pattern: "^[A-Z]{2}-\\d{4}-[A-Z]{3}$"
+        patternErrorMessage: "Formato esperado: AA-1234-XXX"
+        description: Identificador único do orçamento aprovado
+      megaProjeto:
+        title: Mega Projeto
+        type: string
+        description: Nome do projeto macro associado
+      acaoInversora:
+        title: Ação Inversora da Demanda
+        type: string
+        description: Identificador da ação orçamentária
+      aceiteSLA:
+        title: Termo de Aceite
+        type: boolean
+        ui:field: TermoAceiteField
+        ui:options:
+          required: true
+          text: |
+            Eu confirmo que:
+            1. O orçamento para a execução deste projeto foi aprovado e será transferido para a área de Cloud e Automação.
+            2. Utilizei a versão mais recente do anexo de virtualização
+            3. Documentação foi aprovada pelos stakeholders responsáveis durante o processo de RFP para a aquisição deste projeto.
+            4. Aceito validade de 3 meses para reserva de recursos de infraestrutura solicitados, renovável mediante requisição
+          trueLabel: "Li e concordo com os termos acima"
+          falseLabel: "Não concordo"
+
+steps:
+  # Etapa 1: Validação básica
+  - id: validar-dados
+    name: Validar Dados
+    action: framework:validate
+    input:
+      parameters:
+        - nomeNF
+        - vendor
+        - responsavelTecnico
         - email
-        - area
+        - diretoria
+        - gerencia
         - site
-      properties:
-        nomeProjeto:
-          title: Nome do Projeto
-          type: string
-        usuario:
-          title: Nome do Usuário
-          type: string
-        email:
-          title: E-mail
-          type: string
-          format: email
-        area:
-          title: Área
-          type: string
-          enum:
-            - Infraestrutura
-            - Desenvolvimento
-            - Operações
-            - Dados
-            - Segurança
-        site:
-          title: Site
-          type: string
-          enum:
-            - DFCTO
-            - RSIND
-            - PRCTA
-            - SPJGR
-            - SP-SANTA EFIGENIA
-            - SPCTP
-            - SPPAS
-            - SCFNS
-            - MGBHF
-            - RJBAR
-            - AMAFP
-            - PACCP
-            - BATCS
-            - Outro
-        siteOutroEndereco:
-          title: Endereço (se site = Outro)
-          type: string
-          ui:widget: textarea
-        siteOutroJustificativa:
-          title: Justificativa (se site = Outro)
-          type: string
-          ui:widget: textarea
 
+  - id: validar-recursos
+    name: Validar Recursos
+    action: framework:validate
+    input:
+      parameters:
+        - memoria
+        - cpu
+        - disco
+      rules:
+        - memoria:
+            minimum: 1
+            message: "Memória deve ser pelo menos 1GB (valor informado: ${{ parameters.memoria }}GB)"
+        - cpu:
+            minimum: 1
+            message: "Deve haver pelo menos 1 CPU (valor informado: ${{ parameters.cpu }})"
+        - disco:
+            minimum: 10
+            message: "Capacidade de disco deve ser pelo menos 10GB (valor informado: ${{ parameters.disco }}GB)"
 
-    - title: Recursos Necessários
-      required: [cpu, memoria, disco]
-      properties:
-        cpu:
-          title: CPU (cores)
-          type: number
-          minimum: 1
-        memoria:
-          title: Memória (GB)
-          type: number
-          minimum: 1
-        disco:
-          title: Disco (GB)
-          type: number
-          minimum: 1
-        readWriteMany:
-          title: Precisa de múltipla escrita (ReadWriteMany)?
-          type: boolean
-          default: false
+  # Etapa 2: Cálculo do orçamento
+  - id: calcular-orcamento
+    name: Calcular Orçamento
+    action: demanda:calcular-orcamento
+    input:
+      recursos:
+        memoria: ${{ parameters.memoria }}
+        cpu: ${{ parameters.cpu }}
+        disco: ${{ parameters.disco }}
+        dataCenters: ${{ parameters.dataCenters }}
 
-    - title: Orçamento
-      required:
-        - idOrcamento
-        - megaProjeto
-        - acaoInversora
-      properties:
-        idOrcamento:
-          title: ID Orçamentário
-          type: string
-        megaProjeto:
-          title: Mega Projeto (Diretoria)
-          type: string
-        acaoInversora:
-          title: Ação Inversora
-          type: string
+  # Etapa 3: Confirmação
+  - id: confirmar-orcamento
+    name: Confirmar Orçamento
+    action: demanda:validar-termos
+    input:
+      aceiteSLA: ${{ parameters.aceiteSLA }}
+      recursos:
+        memoria: ${{ parameters.memoria }}
+        cpu: ${{ parameters.cpu }}
+        disco: ${{ parameters.disco }}
 
-    - title: Confirmação
-      required:
-        - confirmarCriacao
-      properties:
-        custoSimulado:
-          title: 💰 Custo Estimado
-          type: string
-          default: "R$25"
-          readOnly: true
-        confirmarCriacao:
-          title: Confirmar criação do projeto?
-          type: boolean
+  # Etapa 4: Criação dos tickets
+  - id: criar-tickets
+    name: Criar Tickets no Jira
+    action: demanda:criar
+    input:
+      projeto:
+        nomeNF: ${{ parameters.nomeNF }}
+        vendor: ${{ parameters.vendor }}
+        responsavel: ${{ parameters.responsavelTecnico }}
+        email: ${{ parameters.email }}
+        area: ${{ parameters.diretoria === 'Outra' ? parameters.outraDiretoria : parameters.diretoria }} - ${{ parameters.gerencia === 'Outra' ? parameters.outraGerencia : parameters.gerencia }}
+      recursos:
+        principal:
+          site: ${{ parameters.site }}
+          memoria: ${{ parameters.memoria }}
+          cpu: ${{ parameters.cpu }}
+          disco: ${{ parameters.disco }}
+          readWriteMany: ${{ parameters.readWriteMany }}
+        adicionais: ${{ parameters.dataCenters }}
+      orcamento:
+        id: ${{ parameters.idOrcamento }}
+        megaProjeto: ${{ parameters.megaProjeto }}
+        acaoInversora: ${{ parameters.acaoInversora }}
 
-  steps:
-    - id: verificar-confirmacao
-      name: Verificar Confirmação
-      action: debug:log
-      input:
-        message: |
-          ${{
-            parameters.confirmarCriacao
-              ? "✅ Usuário confirmou criação. Prosseguindo..."
-              : "🚫 Usuário NÃO confirmou. Template será encerrado."
-          }}
+output:
+  links:
+    - title: Ticket Principal
+      url: ${{ steps.criar-tickets.output.ticketPai.url }}
+      icon: ticket
+    - title: Tickets Filhos
+      url: ${{ steps.criar-tickets.output.ticketsFilhos[0].url }}
+      icon: servers
+      if: ${{ steps.criar-tickets.output.ticketsFilhos && steps.criar-tickets.output.ticketsFilhos.length > 0 }}
 
-    - id: criar-ticket
-      name: Criar Ticket no Jira
-      if: ${{ parameters.confirmarCriacao }}
-      action: custom:jira:createTicket
-      input:
-        projectKey: ZT
-        issueType: Task
-        summary: "[Infra] Solicitação: ${{ parameters.nomeProjeto }}"
-        description: |
-          📝 Solicitação de Infraestrutura criada via Backstage:
+  text:
+    - title: Resumo da Criação
+      content: |
+        ## Solicitação processada com sucesso!
 
-          📌 Projeto: ${{ parameters.nomeProjeto }}
-          👤 Solicitante: ${{ parameters.usuario }} - ${{ parameters.email }}
-          🏢 Área: ${{ parameters.area }}
+        **Ticket Principal:**  
+        [${{ steps.criar-tickets.output.ticketPai.id }}](${{ steps.criar-tickets.output.ticketPai.url }})
 
-          📍 Site: ${{ parameters.site }}
-          ${{
-            parameters.site == "Outro"
-              ? "📫 Endereço: " + parameters.siteOutroEndereco + "\n📄 Justificativa: " + parameters.siteOutroJustificativa
-              : ""
-          }}
+        **Sites Adicionais:**  
+        ${{ steps.criar-tickets.output.ticketsFilhos?.map(t => `- [${t.id}](${t.url})`).join('\n') || 'Nenhum' }}
 
-          ⚙️ Recursos:
-          - CPU: ${{ parameters.cpu }}
-          - Memória: ${{ parameters.memoria }}
-          - Disco: ${{ parameters.disco }} GB
-          - RWX: ${{ parameters.readWriteMany }}
-
-          💰 Orçamento:
-          - ID: ${{ parameters.idOrcamento }}
-          - Mega Projeto: ${{ parameters.megaProjeto }}
-          - Ação Inversora: ${{ parameters.acaoInversora }}
-
-          ✅ Solicitação confirmada pelo usuário.
-
-  output:
-    text:
-      - title: Solicitação enviada com sucesso!
-        content: |
-          A abertura de demanda foi realizada e o ticket foi criado no Jira com os dados fornecidos.
+        **Próximos Passos:**  
+        A equipe será notificada e você receberá atualizações por e-mail em:  
+        `${{ parameters.email }}`
